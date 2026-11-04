@@ -730,6 +730,8 @@ SRM Institute of Science and Technology
 
 The goal of this project is to demonstrate how a permissioned blockchain can be integrated with a modern web application to create a secure, traceable, and auditable vehicle ownership management system.
 
+## Set-up
+
 1. Start Docker + WSL
 Open Ubuntu/WSL and check:
 docker ps
