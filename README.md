@@ -729,3 +729,92 @@ SRM Institute of Science and Technology
 ## ⭐ Project Goal
 
 The goal of this project is to demonstrate how a permissioned blockchain can be integrated with a modern web application to create a secure, traceable, and auditable vehicle ownership management system.
+
+1. Start Docker + WSL
+Open Ubuntu/WSL and check:
+docker ps
+
+If your Fabric containers are already running, proceed to Step 2.
+
+If they are not running, start the Fabric network:
+cd ~/hyperledger-projects/fabric-samples/test-network
+./network.sh up -ca
+
+Then verify:
+docker ps
+
+You should see the peers and orderer.
+2. Start the Backend
+Open a new WSL terminal:
+cd ~/hyperledger-projects/vehicle-ownership/backend
+
+Start it:
+node src/server.js
+
+You should see:
+✅ Connected to Hyperledger Fabric
+✅ Channel: mychannel
+✅ Chaincode: vehicle
+✅ Identity: User1@org1.example.com
+
+Keep this terminal running.
+3. Start the Frontend
+Open another new WSL terminal:
+cd ~/hyperledger-projects/vehicle-ownership/frontend
+
+Run:
+npm run dev
+
+You'll get something like:
+Local: http://localhost:5173/
+
+Open:
+
+http://localhost:5173/
+Your setup should look like this
+Terminal 1
+───────────
+Fabric Network
+     ↓
+Docker
+     ↓
+Peers + Orderer + Chaincode
+
+
+Terminal 2
+───────────
+Backend
+node src/server.js
+     ↓
+http://localhost:8000
+
+
+Terminal 3
+───────────
+Frontend
+npm run dev
+     ↓
+http://localhost:5173
+
+If Fabric isn't running after restart
+Before starting the backend, run:
+cd ~/hyperledger-projects/fabric-samples/test-network
+
+./network.sh up -ca
+
+export FABRIC_CFG_PATH=$PWD/../config
+source scripts/envVar.sh
+setGlobals 1
+
+peer lifecycle chaincode querycommitted \
+  --channelID mychannel \
+  --name vehicle
+
+You want to see your committed:
+Name: vehicle
+Version: 1.2
+Sequence: 3
+
+Then start the backend and frontend.
+
+Important: Don't run ./network.sh down unless we intentionally want to tear down the Fabric network.
